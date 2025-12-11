@@ -1,0 +1,5 @@
+{
+  "name": "N8N Image Uploader",
+  "description": "Upload de múltiplas imagens ou pastas para n8n/Supabase com barras de progresso e geração de listas de URL.",
+  "requestFramePermissions": []
+}
