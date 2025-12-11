@@ -12,10 +12,15 @@ RUN npm ci
 # Copy source code
 COPY . .
 
+# Build args for Supabase (Must be passed during docker build)
+ARG VITE_SUPABASE_URL
+ARG VITE_SUPABASE_ANON_KEY
+
+# make them available during build
+ENV VITE_SUPABASE_URL=$VITE_SUPABASE_URL
+ENV VITE_SUPABASE_ANON_KEY=$VITE_SUPABASE_ANON_KEY
+
 # Build the application
-# Note: Ensure VITE_ variables are available in the environment during build if needed,
-# or strictly handled at runtime if using a specific strategy. 
-# Standard Vite replaces import.meta.env at build time.
 RUN npm run build
 
 # Production Stage
