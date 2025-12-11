@@ -16,9 +16,9 @@ export const FileItem: React.FC<FileItemProps> = ({ item, onRemove, onRetry }) =
       {/* Thumbnail or Icon */}
       <div className="w-12 h-12 flex-shrink-0 bg-slate-100 rounded-md overflow-hidden flex items-center justify-center border border-slate-200">
         {isImage ? (
-          <img 
-            src={URL.createObjectURL(item.file)} 
-            alt="Preview" 
+          <img
+            src={URL.createObjectURL(item.file)}
+            alt="Preview"
             className="w-full h-full object-cover opacity-80"
           />
         ) : (
@@ -39,8 +39,8 @@ export const FileItem: React.FC<FileItemProps> = ({ item, onRemove, onRetry }) =
 
         {item.status === UploadStatus.UPLOADING && (
           <div className="space-y-1">
-             <ProgressBar progress={item.progress} />
-             <p className="text-xs text-brand-600 text-right">{item.progress}%</p>
+            <ProgressBar progress={item.progress} />
+            <p className="text-xs text-brand-600 text-right">{item.progress}%</p>
           </div>
         )}
 
@@ -48,19 +48,36 @@ export const FileItem: React.FC<FileItemProps> = ({ item, onRemove, onRetry }) =
           <p className="text-xs text-slate-400">Aguardando...</p>
         )}
 
-        {item.status === UploadStatus.SUCCESS && (
-          <p className="text-xs text-emerald-600 font-medium flex items-center">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-2 mt-1">
+          <p className="text-xs text-emerald-600 font-medium flex items-center flex-shrink-0">
             <svg className="w-3 h-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
             </svg>
-            Enviado com sucesso
+            Enviado
           </p>
-        )}
+          {item.publicUrl && (
+            <div
+              className="flex-1 max-w-full bg-slate-50 border border-slate-200 rounded px-2 py-1 text-[10px] text-slate-500 font-mono flex items-center justify-between cursor-pointer hover:bg-slate-100 hover:border-brand-300 hover:text-brand-600 transition group"
+              onClick={() => {
+                if (item.publicUrl) {
+                  navigator.clipboard.writeText(item.publicUrl);
+                  // Simple visual feedback could be handled by parent or just relied on hover/click effect
+                }
+              }}
+              title="Clique para copiar URL"
+            >
+              <span className="truncate mr-2">{item.publicUrl}</span>
+              <svg className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+              </svg>
+            </div>
+          )}
+        </div>
 
         {item.status === UploadStatus.ERROR && (
           <p className="text-xs text-red-500 font-medium flex items-center">
             <svg className="w-3 h-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
             Erro: {item.errorMessage || "Falha no envio"}
           </p>
@@ -70,17 +87,17 @@ export const FileItem: React.FC<FileItemProps> = ({ item, onRemove, onRetry }) =
       {/* Actions */}
       <div className="flex-shrink-0 flex gap-2">
         {item.status === UploadStatus.ERROR && (
-            <button 
-                onClick={() => onRetry(item.id)}
-                className="p-2 text-slate-400 hover:text-brand-600 hover:bg-slate-50 rounded-full transition-colors"
-                title="Tentar novamente"
-            >
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                </svg>
-            </button>
+          <button
+            onClick={() => onRetry(item.id)}
+            className="p-2 text-slate-400 hover:text-brand-600 hover:bg-slate-50 rounded-full transition-colors"
+            title="Tentar novamente"
+          >
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+          </button>
         )}
-        <button 
+        <button
           onClick={() => onRemove(item.id)}
           className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-full transition-colors"
           title="Remover"
